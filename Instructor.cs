@@ -1,15 +1,9 @@
+using System.Collections.Generic;
+
 namespace nss
 {
-    public class Instructor
+    public class Instructor : Person
     {
-        private string _firstName;
-        private string _lastName;
-
-        public string Name
-        {
-            get => $"{_firstName} {_lastName}";
-        }
-
         public Instructor (string firstName, string lastName)
         {
             _firstName = firstName;
@@ -23,7 +17,7 @@ namespace nss
                 on Student to keep track of which instructor assigned the
                 exercise, and when.
             */
-            student.AssignedExercises.Add(exercise);
+            student.AssignedExercises[exercise] = this;
         }
 
     }

@@ -26,9 +26,9 @@ namespace nss
             luke.AssignExercise(micah, exercises.Single(e => e.Id == 4));
             luke.AssignExercise(micah, exercises.Single(e => e.Id == 2));
 
-            foreach (Exercise ex in micah.AssignedExercises)
+            foreach (KeyValuePair<Exercise, Instructor> ex in micah.AssignedExercises)
             {
-                Console.WriteLine($"{micah.Name} has been assigned {ex.Name}");
+                Console.WriteLine($"{micah.Name} has been assigned {ex.Key.Name} by {ex.Value.Name}");
             }
 
         }
