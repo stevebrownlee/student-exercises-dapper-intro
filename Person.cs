@@ -9,5 +9,9 @@ namespace nss
         {
             get => $"{_firstName} {_lastName}";
         }
+        public int Age {
+            get => throw new System.NotImplementedException();
+            set => throw new System.NotImplementedException();
+        }
     }
 }

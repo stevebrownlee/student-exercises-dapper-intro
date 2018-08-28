@@ -9,7 +9,25 @@ namespace nss
         static void Main(string[] args)
         {
             Cohort cohort11 = new Cohort("Day", 11);
+
             Student micah = new Student("Micah", "Wells");
+
+            try
+            {
+                micah.Computer = new Computer(){
+                    RAMinGB = 16,
+                    CapacityinGB = 500,
+                    OS = "OSX"
+                };
+                Console.WriteLine(micah.Computer.RAMinGB);
+            }
+            catch (System.Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+
+
+
             cohort11.Students.Add(micah);
 
             Instructor luke = new Instructor("Luke", "Lancaster");

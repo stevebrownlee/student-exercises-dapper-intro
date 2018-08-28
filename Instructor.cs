@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace nss
 {
-    public class Instructor : Person
+    public class Instructor : Person, IPerson
     {
         public Instructor (string firstName, string lastName)
         {
@@ -18,7 +18,9 @@ namespace nss
                 on Student to keep track of which instructor assigned the
                 exercise, and when.
             */
-            student.AssignedExercises.Add(new AssignedExercise(exercise, this, DateTime.Now));
+            student.AssignedExercises.Add(
+                new AssignedExercise(exercise, this, DateTime.Now)
+            );
         }
     }
 }
