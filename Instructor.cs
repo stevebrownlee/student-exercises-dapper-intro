@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace nss
@@ -17,8 +18,7 @@ namespace nss
                 on Student to keep track of which instructor assigned the
                 exercise, and when.
             */
-            student.AssignedExercises[exercise] = this;
+            student.AssignedExercises.Add(new AssignedExercise(exercise, this, DateTime.Now));
         }
-
     }
 }

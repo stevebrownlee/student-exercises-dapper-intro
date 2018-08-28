@@ -4,8 +4,7 @@ namespace nss
 {
     public class Student : Person
     {
-        public Dictionary<Exercise, Instructor> AssignedExercises { get; }
-            = new Dictionary<Exercise, Instructor>();
+        public List<AssignedExercise> AssignedExercises { get; } = new List<AssignedExercise>();
 
         public Student (string firstName, string lastName)
         {
