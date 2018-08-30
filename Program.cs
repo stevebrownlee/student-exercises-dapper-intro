@@ -22,6 +22,7 @@ namespace nss
             DatabaseInterface.CheckCohortTable();
             DatabaseInterface.CheckInstructorsTable();
 
+            /*
             db.Query<Instructor>(@"SELECT * FROM Instructor")
               .ToList()
               .ForEach(i => Console.WriteLine($"{i.FirstName} {i.LastName}"));
@@ -29,6 +30,22 @@ namespace nss
             db.Query<Cohort>(@"SELECT * FROM Cohort")
               .ToList()
               .ForEach(i => Console.WriteLine($"{i.Name}"));
+             */
+
+            db.Query<Instructor, Cohort, Instructor>(@"
+                SELECT i.CohortId,
+                       i.FirstName,
+                       i.LastName,
+                       c.Id,
+                       c.Name
+                FROM Instructor i
+                JOIN Cohort c ON c.Id = i.CohortId
+            ", (instructor, cohort) => {
+                instructor.Cohort = cohort;
+                return instructor;
+            })
+            .ToList()
+            .ForEach(i => Console.WriteLine($"{i.FirstName} {i.LastName} is coaching {i.Cohort.Name}"));
 
             /*
                 1. Create Exercises table and seed it

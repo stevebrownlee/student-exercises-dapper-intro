@@ -7,5 +7,6 @@ namespace nss.Data
         public string LastName { get; set; }
         public string SlackHandle { get; set; }
         public string Specialty { get; set; }
+        public Cohort Cohort { get; set; }
     }
 }
