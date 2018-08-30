@@ -13,13 +13,26 @@ namespace nss
         {
             SqliteConnection db = DatabaseInterface.Connection;
             DatabaseInterface.CheckExerciseTable();
+            DatabaseInterface.CheckCohortTable();
+            DatabaseInterface.CheckInstructorsTable();
+            DatabaseInterface.CheckStudentTable();
 
-            db.Execute($@"INSERT INTO Exercise
-                VALUES (null, 'ChickenMonkey', 'JavaScript')");
-            db.Execute($@"INSERT INTO Exercise
-                VALUES (null, 'Overly Excited', 'JavaScript')");
-            db.Execute($@"INSERT INTO Exercise
-                VALUES (null, 'Boy Bands & Vegetables', 'JavaScript')");
+            db.Query<Exercise>(@"SELECT * FROM Exercise")
+              .ToList()
+              .ForEach(e => Console.WriteLine(e.Name));
+
+            db.Query<Instructor>(@"SELECT * FROM Instructor")
+              .ToList()
+              .ForEach(i => Console.WriteLine($"{i.FirstName} {i.LastName}"));
+
+            db.Query<Student>(@"SELECT * FROM Student")
+              .ToList()
+              .ForEach(i => Console.WriteLine($"{i.FirstName} {i.LastName}"));
+
+            db.Query<Cohort>(@"SELECT * FROM Cohort")
+              .ToList()
+              .ForEach(i => Console.WriteLine($"{i.Name}"));
+
 
 
         }
