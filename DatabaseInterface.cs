@@ -207,5 +207,62 @@ namespace nss.Data
                 }
             }
         }
+
+        public static void CheckStudentExerciseTable()
+        {
+            SqliteConnection db = DatabaseInterface.Connection;
+
+            try
+            {
+                List<StudentExercise> se = db.Query<StudentExercise>
+                    ($"SELECT i.Id FROM StudentExercise i").ToList();
+            }
+            catch (System.Exception ex)
+            {
+                if (ex.Message.Contains("no such table"))
+                {
+                    Console.WriteLine("Creating and seeding StudentExercise table");
+                    db.Execute($@"CREATE TABLE StudentExercise (
+                        `Id`	integer NOT NULL PRIMARY KEY AUTOINCREMENT,
+                        `ExerciseId`	varchar(80) NOT NULL,
+                        `StudentId` 	varchar(80) NOT NULL,
+                        FOREIGN KEY(`ExerciseId`) REFERENCES `Exercise`(`Id`),
+                        FOREIGN KEY(`StudentId`) REFERENCES `Student`(`Id`)
+                    )");
+
+                    db.Execute($@"INSERT INTO StudentExercise
+                        SELECT null, e.Id, s.Id
+                        FROM Student s, Exercise e
+                        WHERE e.Name = 'Overly Excited'
+                        AND s.SlackHandle = '@ryan.tanay'
+                    ");
+
+
+                    db.Execute($@"INSERT INTO StudentExercise
+                        SELECT null, e.Id, s.Id
+                        FROM Student s, Exercise e
+                        WHERE e.Name = 'Overly Excited'
+                        AND s.SlackHandle = '@katerebekah'
+                    ");
+
+
+                    db.Execute($@"INSERT INTO StudentExercise
+                        SELECT null, e.Id, s.Id
+                        FROM Student s, Exercise e
+                        WHERE e.Name = 'ChickenMonkey'
+                        AND s.SlackHandle = '@juanrod'
+                    ");
+
+
+                    db.Execute($@"INSERT INTO StudentExercise
+                        SELECT null, e.Id, s.Id
+                        FROM Student s, Exercise e
+                        WHERE e.Name = 'Boy Bands & Vegetables'
+                        AND s.SlackHandle = '@katerebekah'
+                    ");
+
+                }
+            }
+        }
     }
 }
