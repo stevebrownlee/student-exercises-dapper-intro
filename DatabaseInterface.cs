@@ -101,7 +101,8 @@ namespace nss.Data
                               '@coach',
                               'Dad jokes',
                               c.Id
-                        FROM Cohort c WHERE c.Name = 'Evening Cohort 1'
+                        FROM Cohort c
+                        WHERE c.Name = 'Evening Cohort 1'
                     ");
 
                     db.Execute($@"INSERT INTO Instructor
@@ -111,7 +112,8 @@ namespace nss.Data
                               '@joes',
                               'Analogies',
                               c.Id
-                        FROM Cohort c WHERE c.Name = 'Day Cohort 13'
+                        FROM Cohort c
+                        WHERE c.Name = 'Day Cohort 13'
                     ");
 
                     db.Execute($@"INSERT INTO Instructor
@@ -121,7 +123,8 @@ namespace nss.Data
                               '@jisie',
                               'Student success',
                               c.Id
-                        FROM Cohort c WHERE c.Name = 'Day Cohort 21'
+                        FROM Cohort c
+                        WHERE c.Name = 'Day Cohort 21'
                     ");
                 }
             }
