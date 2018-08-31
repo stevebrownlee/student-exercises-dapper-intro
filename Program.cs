@@ -25,15 +25,15 @@ namespace nss
             DatabaseInterface.CheckStudentTable();
             DatabaseInterface.CheckStudentExerciseTable();
 
-            /*
             db.Query<Instructor>(@"SELECT * FROM Instructor")
               .ToList()
               .ForEach(i => Console.WriteLine($"{i.FirstName} {i.LastName}"));
 
+
+
             db.Query<Cohort>(@"SELECT * FROM Cohort")
               .ToList()
               .ForEach(i => Console.WriteLine($"{i.Name}"));
-             */
 
 
             /*
@@ -48,6 +48,7 @@ namespace nss
                        i.LastName,
                        i.SlackHandle,
                        i.Specialty,
+                       i.Id,
                        c.Id,
                        c.Name
                 FROM Instructor i
@@ -97,10 +98,14 @@ namespace nss
                 JOIN Instructor i ON c.Id = i.CohortId
             ", (cohort, instructor) =>
             {
+                // Does the Dictionary already have the key of the cohort Id?
                 if (!report.ContainsKey(cohort.Id))
                 {
+                    // Create the entry in the dictionary
                     report[cohort.Id] = cohort;
                 }
+
+                // Add the instructor to the current cohort entry in Dictionary
                 report[cohort.Id].Instructors.Add(instructor);
                 return cohort;
             });
@@ -142,7 +147,6 @@ namespace nss
             {
                 List<string> assignedExercises = new List<string>();
                 student.Value.AssignedExercises.ForEach(e => assignedExercises.Add(e.Name));
-
                 Console.WriteLine($@"{student.Value.FirstName} {student.Value.LastName} is working on {String.Join(',', assignedExercises)}.");
             }
 
@@ -154,7 +158,7 @@ namespace nss
                 2. Create Student table and seed it  (use sub-selects)
                 3. Create StudentExercise table and seed it (use sub-selects)
                 4. List the instructors and students assigned to each cohort
-                5. List the exercises assigned to each student
+                5. List the students working on each exercise
              */
         }
     }

@@ -27,7 +27,7 @@ namespace nss.Data
 
             try
             {
-                List<Cohort> toys = db.Query<Cohort>
+                List<Cohort> cohorts = db.Query<Cohort>
                     ($"SELECT i.Id FROM Cohort i").ToList();
             }
             catch (System.Exception ex)
@@ -35,8 +35,8 @@ namespace nss.Data
                 if (ex.Message.Contains("no such table"))
                 {
                     db.Execute($@"CREATE TABLE Cohort (
-                        `Id`	integer NOT NULL PRIMARY KEY AUTOINCREMENT,
-                        `Name`	varchar(80) NOT NULL UNIQUE
+                        `Id`	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+                        `Name`	TEXT NOT NULL UNIQUE
                     )");
 
                     db.Execute($@"INSERT INTO Cohort
