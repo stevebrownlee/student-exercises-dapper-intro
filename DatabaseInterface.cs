@@ -28,33 +28,33 @@ namespace nss.Data
             try
             {
                 List<Cohort> cohorts = db.Query<Cohort>
-                    ($"SELECT i.Id FROM Cohort i").ToList();
+                    ("SELECT Id FROM Cohort").ToList();
             }
             catch (System.Exception ex)
             {
                 if (ex.Message.Contains("no such table"))
                 {
-                    db.Execute($@"CREATE TABLE Cohort (
+                    db.Execute(@"CREATE TABLE Cohort (
                         `Id`	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
                         `Name`	TEXT NOT NULL UNIQUE
                     )");
 
-                    db.Execute($@"INSERT INTO Cohort
+                    db.Execute(@"INSERT INTO Cohort
                         VALUES (null, 'Evening Cohort 1')");
 
-                    db.Execute($@"INSERT INTO Cohort
+                    db.Execute(@"INSERT INTO Cohort
                         VALUES (null, 'Day Cohort 10')");
 
-                    db.Execute($@"INSERT INTO Cohort
+                    db.Execute(@"INSERT INTO Cohort
                         VALUES (null, 'Day Cohort 11')");
 
-                    db.Execute($@"INSERT INTO Cohort
+                    db.Execute(@"INSERT INTO Cohort
                         VALUES (null, 'Day Cohort 12')");
 
-                    db.Execute($@"INSERT INTO Cohort
+                    db.Execute(@"INSERT INTO Cohort
                         VALUES (null, 'Day Cohort 13')");
 
-                    db.Execute($@"INSERT INTO Cohort
+                    db.Execute(@"INSERT INTO Cohort
                         VALUES (null, 'Day Cohort 21')");
 
                 }
@@ -69,7 +69,7 @@ namespace nss.Data
             {
                 // Select the ids from the table to see if it exists
                 List<Exercise> toys = db.Query<Exercise>
-                    ($"SELECT e.Id FROM Exercise e").ToList();
+                    ("SELECT Id FROM Exercise").ToList();
             }
             catch (System.Exception ex)
             {
@@ -80,20 +80,20 @@ namespace nss.Data
                 */
                 if (ex.Message.Contains("no such table"))
                 {
-                    db.Execute($@"CREATE TABLE Exercise (
-                        `Id`	integer NOT NULL PRIMARY KEY AUTOINCREMENT,
-                        `Name`	varchar(80) NOT NULL,
-                        `Language` varchar(80) NOT NULL
+                    db.Execute(@"CREATE TABLE Exercise (
+                        `Id`	INTEREST NOT NULL PRIMARY KEY AUTOINCREMENT,
+                        `Name`	VARCHAR(80) NOT NULL,
+                        `Language` VARCHAR(80) NOT NULL
                     )");
 
                     /*
                         Seed the table with some initial entries
                      */
-                    db.Execute($@"INSERT INTO Exercise
+                    db.Execute(@"INSERT INTO Exercise
                         VALUES (null, 'ChickenMonkey', 'JavaScript')");
-                    db.Execute($@"INSERT INTO Exercise
+                    db.Execute(@"INSERT INTO Exercise
                         VALUES (null, 'Overly Excited', 'JavaScript')");
-                    db.Execute($@"INSERT INTO Exercise
+                    db.Execute(@"INSERT INTO Exercise
                         VALUES (null, 'Boy Bands & Vegetables', 'JavaScript')");
 
                 }
@@ -107,7 +107,7 @@ namespace nss.Data
             try
             {
                 List<Instructor> toys = db.Query<Instructor>
-                    ($"SELECT i.Id FROM Instructor i").ToList();
+                    ("SELECT Id FROM Instructor").ToList();
             }
             catch (System.Exception ex)
             {
@@ -163,7 +163,7 @@ namespace nss.Data
             try
             {
                 List<Student> toys = db.Query<Student>
-                    ($"SELECT i.Id FROM Student i").ToList();
+                    ("SELECT Id FROM Student").ToList();
             }
             catch (System.Exception ex)
             {
@@ -215,52 +215,14 @@ namespace nss.Data
             try
             {
                 List<StudentExercise> se = db.Query<StudentExercise>
-                    ($"SELECT i.Id FROM StudentExercise i").ToList();
+                    ("SELECT Id FROM StudentExercise").ToList();
             }
             catch (System.Exception ex)
             {
                 if (ex.Message.Contains("no such table"))
                 {
-                    Console.WriteLine("Creating and seeding StudentExercise table");
-                    db.Execute($@"CREATE TABLE StudentExercise (
-                        `Id`	integer NOT NULL PRIMARY KEY AUTOINCREMENT,
-                        `ExerciseId`	varchar(80) NOT NULL,
-                        `StudentId` 	varchar(80) NOT NULL,
-                        FOREIGN KEY(`ExerciseId`) REFERENCES `Exercise`(`Id`),
-                        FOREIGN KEY(`StudentId`) REFERENCES `Student`(`Id`)
-                    )");
-
-                    db.Execute($@"INSERT INTO StudentExercise
-                        SELECT null, e.Id, s.Id
-                        FROM Student s, Exercise e
-                        WHERE e.Name = 'Overly Excited'
-                        AND s.SlackHandle = '@ryan.tanay'
-                    ");
-
-
-                    db.Execute($@"INSERT INTO StudentExercise
-                        SELECT null, e.Id, s.Id
-                        FROM Student s, Exercise e
-                        WHERE e.Name = 'Overly Excited'
-                        AND s.SlackHandle = '@katerebekah'
-                    ");
-
-
-                    db.Execute($@"INSERT INTO StudentExercise
-                        SELECT null, e.Id, s.Id
-                        FROM Student s, Exercise e
-                        WHERE e.Name = 'ChickenMonkey'
-                        AND s.SlackHandle = '@juanrod'
-                    ");
-
-
-                    db.Execute($@"INSERT INTO StudentExercise
-                        SELECT null, e.Id, s.Id
-                        FROM Student s, Exercise e
-                        WHERE e.Name = 'Boy Bands & Vegetables'
-                        AND s.SlackHandle = '@katerebekah'
-                    ");
-
+                    StudentExercise.Create(db);
+                    StudentExercise.Seed(db);
                 }
             }
         }

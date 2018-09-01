@@ -4,6 +4,7 @@ using System.Linq;
 using Microsoft.Data.Sqlite;
 using nss.Data;
 using Dapper;
+using System.Text;
 
 /*
     To install required packages from NuGet
@@ -25,15 +26,25 @@ namespace nss
             DatabaseInterface.CheckStudentTable();
             DatabaseInterface.CheckStudentExerciseTable();
 
-            db.Query<Instructor>(@"SELECT * FROM Instructor")
-              .ToList()
-              .ForEach(i => Console.WriteLine($"{i.FirstName} {i.LastName}"));
+            List<Instructor> instructors = db.Query<Instructor>(@"SELECT * FROM Instructor").ToList();
+            instructors.ForEach(i => Console.WriteLine($"{i.FirstName} {i.LastName}"));
 
+            List<Exercise> exercises = db.Query<Exercise>(@"SELECT * FROM Exercise").ToList();
+            exercises.ForEach(e => Console.WriteLine($"{e.Name}"));
 
+            List<Student> students = db.Query<Student>(@"SELECT * FROM Student").ToList();
+            students.ForEach(s => Console.WriteLine($"{s.FirstName} {s.LastName}"));
 
             db.Query<Cohort>(@"SELECT * FROM Cohort")
               .ToList()
               .ForEach(i => Console.WriteLine($"{i.Name}"));
+
+            // Instructor steve = instructors.Single(i => i.LastName == "Brownlee");
+            // steve.AssignExercise(
+            //     exercises.Single(e => e.Name == "Boy Bands & Vegetables"),
+            //     students.Single(s => s.SlackHandle == "@juanrod")
+            // );
+
 
 
             /*
@@ -119,6 +130,11 @@ namespace nss
             }
 
 
+            /*
+                Navigating a Many To Many relationship in the database is largely
+                the same process. The SQL will definitely change since you need
+                to join the two resources through the intersection table.
+             */
             Dictionary<int, Student> studentExercises = new Dictionary<int, Student>();
 
             db.Query<Student, Exercise, Student>(@"
@@ -147,8 +163,75 @@ namespace nss
             {
                 List<string> assignedExercises = new List<string>();
                 student.Value.AssignedExercises.ForEach(e => assignedExercises.Add(e.Name));
+
                 Console.WriteLine($@"{student.Value.FirstName} {student.Value.LastName} is working on {String.Join(',', assignedExercises)}.");
             }
+
+
+
+
+            /*
+                If you need to join additional tables, just add the corresponding
+                model to the list of types for Query method. In the example below,
+                you have augmented the query above by including a JOIN to the
+                Cohort table. Therefore, the Query method must be typed as
+                <Student, Exercise, Cohort, Student>.
+             */
+            Dictionary<int, Student> verboseStudents = new Dictionary<int, Student>();
+
+            db.Query<Student, Exercise, Cohort, Student>(@"
+                SELECT
+                       s.Id,
+                       s.FirstName,
+                       s.LastName,
+                       s.SlackHandle,
+                       e.Id,
+                       e.Name,
+                       e.Language,
+                       c.Id,
+                       c.Name
+                FROM Student s
+                JOIN StudentExercise se ON s.Id = se.StudentId
+                JOIN Exercise e ON se.ExerciseId = e.Id
+                JOIN Cohort c ON s.CohortId = c.Id
+            ", (student, exercise, cohort) =>
+            {
+                if (!verboseStudents.ContainsKey(student.Id))
+                {
+                    verboseStudents[student.Id] = student;
+                }
+                verboseStudents[student.Id].AssignedExercises.Add(exercise);
+                verboseStudents[student.Id].Cohort = cohort;
+                return student;
+            });
+
+            /*
+                Display the student information using the StringBuilder class
+             */
+            foreach (KeyValuePair<int, Student> student in verboseStudents)
+            {
+                List<string> assignedExercises = new List<string>();
+                student.Value.AssignedExercises.ForEach(e => assignedExercises.Add(e.Name));
+
+                StringBuilder output = new StringBuilder(100);
+                output.Append($"{student.Value.FirstName} {student.Value.LastName} ");
+                output.Append($"in {student.Value.Cohort.Name} ");
+                output.Append($"is working on {String.Join(',', assignedExercises)}.");
+                Console.WriteLine(output);
+            }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
