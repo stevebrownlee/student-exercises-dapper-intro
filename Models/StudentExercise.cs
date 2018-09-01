@@ -4,9 +4,8 @@ using Microsoft.Data.Sqlite;
 
 namespace nss.Data
 {
-    public class StudentExercise
+    public class StudentExercise : Model
     {
-        public int Id { get; set; }
         public Student Student { get; set; }
         public Exercise Exercise { get; set; }
         public Instructor Instructor { get; set; }
@@ -20,7 +19,7 @@ namespace nss.Data
                 `InstructorId` 	INTEGER NOT NULL,
                 FOREIGN KEY(`ExerciseId`) REFERENCES `Exercise`(`Id`),
                 FOREIGN KEY(`StudentId`) REFERENCES `Student`(`Id`),
-                FOREIGN KEY(`InstructorId`) REFERENCES `Instrutor`(`Id`)
+                FOREIGN KEY(`InstructorId`) REFERENCES `Instructor`(`Id`)
             )");
         }
         public static void Seed(SqliteConnection db)

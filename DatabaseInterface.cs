@@ -20,6 +20,28 @@ namespace nss.Data
             }
         }
 
+        public static void CheckTable<T>(
+            string table,
+            Action<SqliteConnection> create,
+            Action<SqliteConnection> seed
+        )
+        {
+            SqliteConnection db = DatabaseInterface.Connection;
+
+            try
+            {
+                List<T> cohorts = db.Query<T>
+                    ($"SELECT Id FROM {table}").ToList();
+            }
+            catch (System.Exception ex)
+            {
+                if (ex.Message.Contains("no such table"))
+                {
+                    create(db);
+                    seed(db);
+                }
+            }
+        }
 
         public static void CheckCohortTable()
         {
@@ -34,29 +56,8 @@ namespace nss.Data
             {
                 if (ex.Message.Contains("no such table"))
                 {
-                    db.Execute(@"CREATE TABLE Cohort (
-                        `Id`	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-                        `Name`	TEXT NOT NULL UNIQUE
-                    )");
-
-                    db.Execute(@"INSERT INTO Cohort
-                        VALUES (null, 'Evening Cohort 1')");
-
-                    db.Execute(@"INSERT INTO Cohort
-                        VALUES (null, 'Day Cohort 10')");
-
-                    db.Execute(@"INSERT INTO Cohort
-                        VALUES (null, 'Day Cohort 11')");
-
-                    db.Execute(@"INSERT INTO Cohort
-                        VALUES (null, 'Day Cohort 12')");
-
-                    db.Execute(@"INSERT INTO Cohort
-                        VALUES (null, 'Day Cohort 13')");
-
-                    db.Execute(@"INSERT INTO Cohort
-                        VALUES (null, 'Day Cohort 21')");
-
+                    Cohort.Create(db);
+                    Cohort.Seed(db);
                 }
             }
         }
@@ -68,7 +69,7 @@ namespace nss.Data
             try
             {
                 // Select the ids from the table to see if it exists
-                List<Exercise> toys = db.Query<Exercise>
+                List<Exercise> ex = db.Query<Exercise>
                     ("SELECT Id FROM Exercise").ToList();
             }
             catch (System.Exception ex)
@@ -80,22 +81,8 @@ namespace nss.Data
                 */
                 if (ex.Message.Contains("no such table"))
                 {
-                    db.Execute(@"CREATE TABLE Exercise (
-                        `Id`	INTEREST NOT NULL PRIMARY KEY AUTOINCREMENT,
-                        `Name`	VARCHAR(80) NOT NULL,
-                        `Language` VARCHAR(80) NOT NULL
-                    )");
-
-                    /*
-                        Seed the table with some initial entries
-                     */
-                    db.Execute(@"INSERT INTO Exercise
-                        VALUES (null, 'ChickenMonkey', 'JavaScript')");
-                    db.Execute(@"INSERT INTO Exercise
-                        VALUES (null, 'Overly Excited', 'JavaScript')");
-                    db.Execute(@"INSERT INTO Exercise
-                        VALUES (null, 'Boy Bands & Vegetables', 'JavaScript')");
-
+                    Exercise.Create(db);
+                    Exercise.Seed(db);
                 }
             }
         }
@@ -113,45 +100,8 @@ namespace nss.Data
             {
                 if (ex.Message.Contains("no such table"))
                 {
-                    db.Execute($@"CREATE TABLE Instructor (
-                        `Id`	integer NOT NULL PRIMARY KEY AUTOINCREMENT,
-                        `FirstName`	varchar(80) NOT NULL,
-                        `LastName`	varchar(80) NOT NULL,
-                        `SlackHandle`	varchar(80) NOT NULL,
-                        `Specialty` varchar(80),
-                        `CohortId`	integer NOT NULL,
-                        FOREIGN KEY(`CohortId`) REFERENCES `Cohort`(`Id`)
-                    )");
-
-                    db.Execute($@"INSERT INTO Instructor
-                        SELECT null,
-                              'Steve',
-                              'Brownlee',
-                              '@coach',
-                              'Dad jokes',
-                              c.Id
-                        FROM Cohort c WHERE c.Name = 'Evening Cohort 1'
-                    ");
-
-                    db.Execute($@"INSERT INTO Instructor
-                        SELECT null,
-                              'Joe',
-                              'Shepherd',
-                              '@joes',
-                              'Analogies',
-                              c.Id
-                        FROM Cohort c WHERE c.Name = 'Day Cohort 13'
-                    ");
-
-                    db.Execute($@"INSERT INTO Instructor
-                        SELECT null,
-                              'Jisie',
-                              'David',
-                              '@jisie',
-                              'Student success',
-                              c.Id
-                        FROM Cohort c WHERE c.Name = 'Day Cohort 21'
-                    ");
+                    Instructor.Create(db);
+                    Instructor.Seed(db);
                 }
             }
         }
@@ -169,41 +119,8 @@ namespace nss.Data
             {
                 if (ex.Message.Contains("no such table"))
                 {
-                    db.Execute($@"CREATE TABLE Student (
-                        `Id`	integer NOT NULL PRIMARY KEY AUTOINCREMENT,
-                        `FirstName`	varchar(80) NOT NULL,
-                        `LastName`	varchar(80) NOT NULL,
-                        `SlackHandle`	varchar(80) NOT NULL,
-                        `CohortId`	integer NOT NULL,
-                        FOREIGN KEY(`CohortId`) REFERENCES `Cohort`(`Id`)
-                    )");
-
-                    db.Execute($@"INSERT INTO Student
-                        SELECT null,
-                              'Kate',
-                              'Williams',
-                              '@katerebekah',
-                              c.Id
-                        FROM Cohort c WHERE c.Name = 'Evening Cohort 1'
-                    ");
-
-                    db.Execute($@"INSERT INTO Student
-                        SELECT null,
-                              'Ryan',
-                              'Tanay',
-                              '@ryan.tanay',
-                              c.Id
-                        FROM Cohort c WHERE c.Name = 'Day Cohort 10'
-                    ");
-
-                    db.Execute($@"INSERT INTO Student
-                        SELECT null,
-                              'Juan',
-                              'Rodriguez',
-                              '@juanrod',
-                              c.Id
-                        FROM Cohort c WHERE c.Name = 'Day Cohort 11'
-                    ");
+                    Student.Create(db);
+                    Student.Seed(db);
                 }
             }
         }
