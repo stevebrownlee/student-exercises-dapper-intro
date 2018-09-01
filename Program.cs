@@ -20,46 +20,25 @@ namespace nss
         static void Main(string[] args)
         {
             SqliteConnection db = DatabaseInterface.Connection;
-            // DatabaseInterface.CheckExerciseTable();
-            // DatabaseInterface.CheckCohortTable();
-            // DatabaseInterface.CheckInstructorsTable();
-            // DatabaseInterface.CheckStudentTable();
-            DatabaseInterface.CheckTable<Exercise>(
-                "Exercise",
-                Exercise.Create,
-                Exercise.Seed
-            );
-            DatabaseInterface.CheckTable<Cohort>(
-                "Cohort",
-                Cohort.Create,
-                Cohort.Seed
-            );
-            DatabaseInterface.CheckTable<Instructor>(
-                "Instructor",
-                Instructor.Create,
-                Instructor.Seed
-            );
-            DatabaseInterface.CheckTable<Student>(
-                "Student",
-                Student.Create,
-                Student.Seed
-            );
-            DatabaseInterface.CheckTable<StudentExercise>(
-                "StudentExercise",
-                StudentExercise.Create,
-                StudentExercise.Seed
-            );
-            // DatabaseInterface.CheckStudentExerciseTable();
+            DatabaseInterface.CheckTable<Exercise>("Exercise", Exercise.Create, Exercise.Seed);
+            DatabaseInterface.CheckTable<Cohort>("Cohort", Cohort.Create, Cohort.Seed);
+            DatabaseInterface.CheckTable<Instructor>("Instructor", Instructor.Create, Instructor.Seed);
+            DatabaseInterface.CheckTable<Student>("Student", Student.Create, Student.Seed);
+            DatabaseInterface.CheckTable<StudentExercise>("StudentExercise", StudentExercise.Create, StudentExercise.Seed);
 
+            // List all instructors
             List<Instructor> instructors = db.Query<Instructor>(@"SELECT * FROM Instructor").ToList();
             instructors.ForEach(i => Console.WriteLine($"{i.FirstName} {i.LastName}"));
 
+            // List all exercises
             List<Exercise> exercises = db.Query<Exercise>(@"SELECT * FROM Exercise").ToList();
             exercises.ForEach(e => Console.WriteLine($"{e.Name}"));
 
+            // List all students
             List<Student> students = db.Query<Student>(@"SELECT * FROM Student").ToList();
             students.ForEach(s => Console.WriteLine($"{s.FirstName} {s.LastName}"));
 
+            // List all cohorts
             db.Query<Cohort>(@"SELECT * FROM Cohort")
               .ToList()
               .ForEach(i => Console.WriteLine($"{i.Name}"));
