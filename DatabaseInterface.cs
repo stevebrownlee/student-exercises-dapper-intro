@@ -30,7 +30,7 @@ namespace nss.Data
 
             try
             {
-                List<T> resources = db.Query<T>($"SELECT Id FROM {table}").ToList();
+                IEnumerable<T> resources = db.Query<T>($"SELECT Id FROM {table}");
             }
             catch (System.Exception ex)
             {

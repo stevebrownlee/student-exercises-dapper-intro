@@ -60,5 +60,4 @@ namespace nss.Data
             ");
         }
     }
-
 }

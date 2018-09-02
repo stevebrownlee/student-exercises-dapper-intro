@@ -15,13 +15,13 @@ namespace nss.Data
         public static void Create(SqliteConnection db)
         {
             db.Execute($@"CREATE TABLE Student (
-                        `Id`	integer NOT NULL PRIMARY KEY AUTOINCREMENT,
-                        `FirstName`	varchar(80) NOT NULL,
-                        `LastName`	varchar(80) NOT NULL,
-                        `SlackHandle`	varchar(80) NOT NULL,
-                        `CohortId`	integer NOT NULL,
-                        FOREIGN KEY(`CohortId`) REFERENCES `Cohort`(`Id`)
-                    )");
+                `Id`	       INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+                `FirstName`	   TEXT NOT NULL,
+                `LastName`	   TEXT NOT NULL,
+                `SlackHandle`  TEXT NOT NULL,
+                `CohortId`	   INTEGER NOT NULL,
+                FOREIGN KEY(`CohortId`) REFERENCES `Cohort`(`Id`)
+            )");
         }
 
         public static void Seed(SqliteConnection db)
@@ -52,8 +52,6 @@ namespace nss.Data
                         c.Id
                 FROM Cohort c WHERE c.Name = 'Day Cohort 11'
             ");
-
         }
     }
-
 }

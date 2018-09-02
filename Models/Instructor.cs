@@ -24,12 +24,12 @@ namespace nss.Data
         public static void Create(SqliteConnection db)
         {
             db.Execute($@"CREATE TABLE Instructor (
-                `Id`	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-                `FirstName`	TEXT NOT NULL,
-                `LastName`	TEXT NOT NULL,
-                `SlackHandle`	TEXT NOT NULL,
-                `Specialty` TEXT,
-                `CohortId`	INTEGER NOT NULL,
+                `Id`	      INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+                `FirstName`	  TEXT NOT NULL,
+                `LastName`	  TEXT NOT NULL,
+                `SlackHandle` TEXT NOT NULL,
+                `Specialty`   TEXT,
+                `CohortId`	  INTEGER NOT NULL,
                 FOREIGN KEY(`CohortId`) REFERENCES `Cohort`(`Id`)
             )");
         }
@@ -37,34 +37,44 @@ namespace nss.Data
         public static void Seed(SqliteConnection db)
         {
             db.Execute($@"INSERT INTO Instructor
-                        SELECT null,
-                              'Steve',
-                              'Brownlee',
-                              '@coach',
-                              'Dad jokes',
-                              c.Id
-                        FROM Cohort c WHERE c.Name = 'Evening Cohort 1'
-                    ");
+                SELECT null,
+                        'Steve',
+                        'Brownlee',
+                        '@coach',
+                        'Dad jokes',
+                        c.Id
+                FROM Cohort c WHERE c.Name = 'Evening Cohort 1'
+            ");
 
             db.Execute($@"INSERT INTO Instructor
-                        SELECT null,
-                              'Joe',
-                              'Shepherd',
-                              '@joes',
-                              'Analogies',
-                              c.Id
-                        FROM Cohort c WHERE c.Name = 'Day Cohort 13'
-                    ");
+                SELECT null,
+                        'Joe',
+                        'Shepherd',
+                        '@joes',
+                        'Analogies',
+                        c.Id
+                FROM Cohort c WHERE c.Name = 'Day Cohort 13'
+            ");
 
             db.Execute($@"INSERT INTO Instructor
-                        SELECT null,
-                              'Jisie',
-                              'David',
-                              '@jisie',
-                              'Student success',
-                              c.Id
-                        FROM Cohort c WHERE c.Name = 'Day Cohort 21'
-                    ");
+                SELECT null,
+                        'Jisie',
+                        'David',
+                        '@jisie',
+                        'Student success',
+                        c.Id
+                FROM Cohort c WHERE c.Name = 'Day Cohort 21'
+            ");
+
+            db.Execute($@"INSERT INTO Instructor
+                SELECT null,
+                        'Emily',
+                        'Lemmon',
+                        '@emlem',
+                        'Memes',
+                        c.Id
+                FROM Cohort c WHERE c.Name = 'Day Cohort 21'
+            ");
         }
 
     }
