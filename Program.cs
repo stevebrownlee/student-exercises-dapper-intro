@@ -47,6 +47,7 @@ namespace nss
 
 
 
+
             /*
                 Query the database for each instructor, and join in the instructor's cohort.
                 Since an instructor is only assigned to one cohort at a time, you can simply
@@ -71,6 +72,8 @@ namespace nss
             })
             .ToList()
             .ForEach(i => Console.WriteLine($"{i.FirstName} {i.LastName} ({i.SlackHandle}) is coaching {i.Cohort.Name}"));
+
+
 
 
             /*
@@ -128,6 +131,8 @@ namespace nss
             {
                 Console.WriteLine($"{cohort.Value.Name} has {cohort.Value.Instructors.Count} instructors.");
             }
+
+
 
 
             /*
@@ -223,25 +228,13 @@ namespace nss
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
             /*
                 1. Create Exercises table and seed it
                 2. Create Student table and seed it  (use sub-selects)
                 3. Create StudentExercise table and seed it (use sub-selects)
                 4. List the instructors and students assigned to each cohort
-                5. List the students working on each exercise
+                5. List the students working on each exercise, include the
+                   student's cohort and the instructor who assigned the exercise
              */
         }
     }
