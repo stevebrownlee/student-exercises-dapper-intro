@@ -25,17 +25,6 @@ namespace nss
             DatabaseInterface.CheckStudentTable();
             DatabaseInterface.CheckStudentExerciseTable();
 
-            db.Query<Instructor>(@"SELECT * FROM Instructor")
-              .ToList()
-              .ForEach(i => Console.WriteLine($"{i.FirstName} {i.LastName}"));
-
-
-
-            db.Query<Cohort>(@"SELECT * FROM Cohort")
-              .ToList()
-              .ForEach(i => Console.WriteLine($"{i.Name}"));
-
-
             /*
                 Query the database for each instructor, and join in the instructor's cohort.
                 Since an instructor is only assigned to one cohort at a time, you can simply
@@ -58,8 +47,8 @@ namespace nss
                 instructor.Cohort = cohort;
                 return instructor;
             })
-            .ToList()
-            .ForEach(i => Console.WriteLine($"{i.FirstName} {i.LastName} ({i.SlackHandle}) is coaching {i.Cohort.Name}"));
+            .ToList();
+            // .ForEach(i => Console.WriteLine($"{i.FirstName} {i.LastName} ({i.SlackHandle}) is coaching {i.Cohort.Name}"));
 
 
             /*
@@ -84,7 +73,7 @@ namespace nss
              */
             Dictionary<int, Cohort> report = new Dictionary<int, Cohort>();
 
-            db.Query<Cohort, Instructor, Cohort>(@"
+            db.Query<Cohort, Instructor, Student, Cohort>(@"
                 SELECT
                        c.Id,
                        c.Name,
@@ -93,20 +82,33 @@ namespace nss
                        i.LastName,
                        i.CohortId,
                        i.SlackHandle,
-                       i.Specialty
+                       i.Specialty,
+                       s.Id,
+                       s.FirstName,
+                       s.LastName,
+                       s.CohortId,
+                       s.SlackHandle
                 FROM Cohort c
-                JOIN Instructor i ON c.Id = i.CohortId
-            ", (cohort, instructor) =>
+                LEFT JOIN Instructor i ON c.Id = i.CohortId
+                LEFT JOIN Student s ON c.Id = s.CohortId
+            ", (cohort, instructor, student) =>
             {
-                // Does the Dictionary already have the key of the cohort Id?
                 if (!report.ContainsKey(cohort.Id))
                 {
-                    // Create the entry in the dictionary
                     report[cohort.Id] = cohort;
                 }
 
-                // Add the instructor to the current cohort entry in Dictionary
-                report[cohort.Id].Instructors.Add(instructor);
+                if (
+                    instructor != null &&
+                    report[cohort.Id].Instructors.Where(i => i.Id == instructor.Id).Count() == 0
+                   )
+                {
+                    report[cohort.Id].Instructors.Add(instructor);
+                }
+                if (student != null)
+                {
+                    report[cohort.Id].Students.Add(student);
+                }
                 return cohort;
             });
 
@@ -115,40 +117,54 @@ namespace nss
              */
             foreach (KeyValuePair<int, Cohort> cohort in report)
             {
-                Console.WriteLine($"{cohort.Value.Name} has {cohort.Value.Instructors.Count} instructors.");
+                Console.WriteLine($"{cohort.Value.Name} has the following instructors and students:");
+                cohort.Value.Instructors.Distinct().ToList().ForEach(i => Console.WriteLine($"\t- {i.FirstName} {i.LastName} is an instructor"));
+                cohort.Value.Students.ForEach(i => Console.WriteLine($"\t- {i.FirstName} {i.LastName} is a student"));
             }
 
 
-            Dictionary<int, Student> studentExercises = new Dictionary<int, Student>();
+            Console.WriteLine("\n\n\n");
 
-            db.Query<Student, Exercise, Student>(@"
+
+
+            Dictionary<int, Exercise> exerciseStudents = new Dictionary<int, Exercise>();
+
+            db.Query<Exercise, Student, Exercise>(@"
                 SELECT
+                       e.Id,
+                       e.Name,
+                       e.Language,
                        s.Id,
                        s.FirstName,
                        s.LastName,
-                       s.SlackHandle,
-                       e.Id,
-                       e.Name,
-                       e.Language
-                FROM Student s
-                JOIN StudentExercise se ON s.Id = se.StudentId
-                JOIN Exercise e ON se.ExerciseId = e.Id
-            ", (student, exercise) =>
+                       s.CohortId,
+                       s.SlackHandle
+                FROM Exercise e
+                JOIN StudentExercise se ON se.ExerciseId = e.Id
+                JOIN Student s ON s.Id = se.StudentId
+            ", (exercise, student) =>
             {
-                if (!studentExercises.ContainsKey(student.Id))
+                if (!exerciseStudents.ContainsKey(exercise.Id))
                 {
-                    studentExercises[student.Id] = student;
+                    exerciseStudents[exercise.Id] = exercise;
                 }
-                studentExercises[student.Id].AssignedExercises.Add(exercise);
-                return student;
+
+                exerciseStudents[exercise.Id].AssignedStudents.Add(student);
+                return exercise;
             });
 
-            foreach (KeyValuePair<int, Student> student in studentExercises)
+            /*
+                Iterate the key/value pairs in the dictionary
+             */
+            foreach (KeyValuePair<int, Exercise> e in exerciseStudents)
             {
-                List<string> assignedExercises = new List<string>();
-                student.Value.AssignedExercises.ForEach(e => assignedExercises.Add(e.Name));
-                Console.WriteLine($@"{student.Value.FirstName} {student.Value.LastName} is working on {String.Join(',', assignedExercises)}.");
+                Console.WriteLine($"{e.Value.Name} has the following students working on it.");
+                e.Value.AssignedStudents.ForEach(s => Console.WriteLine($"\t- {s.FirstName} {s.LastName}"));
             }
+
+
+
+
 
 
 

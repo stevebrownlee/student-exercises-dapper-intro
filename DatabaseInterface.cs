@@ -198,11 +198,56 @@ namespace nss.Data
 
                     db.Execute($@"INSERT INTO Student
                         SELECT null,
+                              'Rachel',
+                              'Morgan',
+                              '@rachelmorgan',
+                              c.Id
+                        FROM Cohort c WHERE c.Name = 'Day Cohort 10'
+                    ");
+
+                    db.Execute($@"INSERT INTO Student
+                        SELECT null,
                               'Juan',
                               'Rodriguez',
                               '@juanrod',
                               c.Id
                         FROM Cohort c WHERE c.Name = 'Day Cohort 11'
+                    ");
+
+                    db.Execute($@"INSERT INTO Student
+                        SELECT null,
+                              'Paloma',
+                              'Venegas',
+                              '@paloma13',
+                              c.Id
+                        FROM Cohort c WHERE c.Name = 'Day Cohort 12'
+                    ");
+
+                    db.Execute($@"INSERT INTO Student
+                        SELECT null,
+                              'Kaylee',
+                              'Cummings',
+                              '@kaylee.cummings',
+                              c.Id
+                        FROM Cohort c WHERE c.Name = 'Day Cohort 12'
+                    ");
+
+                    db.Execute($@"INSERT INTO Student
+                        SELECT null,
+                              'Hannah',
+                              'Hall',
+                              '@hannah1090',
+                              c.Id
+                        FROM Cohort c WHERE c.Name = 'Day Cohort 13'
+                    ");
+
+                    db.Execute($@"INSERT INTO Student
+                        SELECT null,
+                              'Tekisha',
+                              'Hammock',
+                              '@tekishhammock',
+                              c.Id
+                        FROM Cohort c WHERE c.Name = 'Day Cohort 13'
                     ");
                 }
             }
