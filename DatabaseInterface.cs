@@ -14,6 +14,14 @@ namespace nss.Data
         {
             get
             {
+                /*
+                    Mac users: You can create an environment variable in your
+                    .zshrc file.
+                        export NSS_DB="/path/to/your/project/nss.db"
+
+                    Windows users: You need to use a property window
+                        http://www.forbeslindesay.co.uk/post/42833119552/permanently-set-environment-variables-on-windows
+                 */
                 string env = $"{Environment.GetEnvironmentVariable("NSS_DB")}";
                 string _connectionString = $"Data Source={env}";
                 return new SqliteConnection(_connectionString);

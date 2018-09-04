@@ -20,11 +20,8 @@ namespace nss
         static void Main(string[] args)
         {
             SqliteConnection db = DatabaseInterface.Connection;
-            DatabaseInterface.CheckExerciseTable();
             DatabaseInterface.CheckCohortTable();
             DatabaseInterface.CheckInstructorsTable();
-            DatabaseInterface.CheckStudentTable();
-            DatabaseInterface.CheckStudentExerciseTable();
 
             List<Instructor> instructors = db.Query<Instructor>(@"SELECT * FROM Instructor").ToList();
             instructors.ForEach(i => Console.WriteLine($"{i.FirstName} {i.LastName}"));
@@ -38,12 +35,6 @@ namespace nss
             db.Query<Cohort>(@"SELECT * FROM Cohort")
               .ToList()
               .ForEach(i => Console.WriteLine($"{i.Name}"));
-
-            // Instructor steve = instructors.Single(i => i.LastName == "Brownlee");
-            // steve.AssignExercise(
-            //     exercises.Single(e => e.Name == "Boy Bands & Vegetables"),
-            //     students.Single(s => s.SlackHandle == "@juanrod")
-            // );
 
 
 
