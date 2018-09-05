@@ -80,7 +80,7 @@ namespace nss.Data
                 */
                 if (ex.Message.Contains("no such table"))
                 {
-                    db.Execute($@"CREATE TABLE Exercise (
+                    db.Execute($@"CREATE TABLE `Exercise` (
                         `Id`	integer NOT NULL PRIMARY KEY AUTOINCREMENT,
                         `Name`	varchar(80) NOT NULL,
                         `Language` varchar(80) NOT NULL

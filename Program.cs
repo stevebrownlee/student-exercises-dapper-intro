@@ -73,7 +73,7 @@ namespace nss
              */
             Dictionary<int, Cohort> report = new Dictionary<int, Cohort>();
 
-            db.Query<Cohort, Instructor, Student, Cohort>(@"
+            db.Query<Cohort, Instructor, Student, Exercise, Cohort>(@"
                 SELECT
                        c.Id,
                        c.Name,
@@ -87,17 +87,23 @@ namespace nss
                        s.FirstName,
                        s.LastName,
                        s.CohortId,
-                       s.SlackHandle
+                       s.SlackHandle,
+                       e.Id,
+                       e.Name
                 FROM Cohort c
                 LEFT JOIN Instructor i ON c.Id = i.CohortId
                 LEFT JOIN Student s ON c.Id = s.CohortId
-            ", (cohort, instructor, student) =>
+                LEFT JOIN StudentExercise se on se.StudentId = s.Id
+                LEFT JOIN Exercise e on e.Id = se.ExerciseId
+
+            ", (cohort, instructor, student, exercise) =>
             {
                 if (!report.ContainsKey(cohort.Id))
                 {
                     report[cohort.Id] = cohort;
                 }
 
+                // Add instructor to list on cohort
                 if (
                     instructor != null &&
                     report[cohort.Id].Instructors.Where(i => i.Id == instructor.Id).Count() == 0
@@ -105,10 +111,25 @@ namespace nss
                 {
                     report[cohort.Id].Instructors.Add(instructor);
                 }
-                if (student != null)
+
+                // Add student to list on cohort
+                if (
+                    student != null &&
+                    report[cohort.Id].Students.Where(i => i.Id == student.Id).Count() == 0
+                )
                 {
                     report[cohort.Id].Students.Add(student);
                 }
+
+                Student currentStudent = report[cohort.Id].Students.SingleOrDefault(s => s.Id == student.Id);
+                if (
+                    exercise != null &&
+                    currentStudent.AssignedExercises.Where(e => e.Id == exercise.Id).Count() == 0
+                )
+                {
+                    currentStudent.AssignedExercises.Add(exercise);
+                }
+
                 return cohort;
             });
 
@@ -119,7 +140,7 @@ namespace nss
             {
                 Console.WriteLine($"{cohort.Value.Name} has the following instructors and students:");
                 cohort.Value.Instructors.Distinct().ToList().ForEach(i => Console.WriteLine($"\t- {i.FirstName} {i.LastName} is an instructor"));
-                cohort.Value.Students.ForEach(i => Console.WriteLine($"\t- {i.FirstName} {i.LastName} is a student"));
+                cohort.Value.Students.ForEach(i => Console.WriteLine($"\t- {i.FirstName} {i.LastName} is a student and is working on {String.Join(", ", i.AssignedExercises.Select(e => e.Name).ToList())} exercises."));
             }
 
 
