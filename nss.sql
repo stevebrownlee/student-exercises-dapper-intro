@@ -1,3 +1,8 @@
+-- ***********************************
+-- DO NOT USE THIS SQL FILE FOR SQLITE
+-- ***********************************
+-- This SQL file is for populating SQL Server
+
 DELETE FROM StudentExercise;
 DELETE FROM Student;
 DELETE FROM Exercise;
