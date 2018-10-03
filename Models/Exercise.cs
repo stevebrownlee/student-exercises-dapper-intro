@@ -8,7 +8,7 @@ namespace nss.Data
     {
         public string Name { get; set; }
         public string Language { get; set; }
-        public List<Student> AssignedStudents { get; set; }
+        public List<Student> AssignedStudents { get; set; } = new List<Student>();
 
         public static void Create(SqliteConnection db)
         {

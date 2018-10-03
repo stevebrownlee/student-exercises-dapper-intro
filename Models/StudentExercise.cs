@@ -4,8 +4,12 @@ using Microsoft.Data.Sqlite;
 
 namespace nss.Data
 {
-    public class StudentExercise : Model
+    public class StudentExercise
     {
+        public int Id { get; set; }
+        public int StudentId { get; set; }
+        public int ExerciseId { get; set; }
+        public int InstructorId { get; set; }
         public Student Student { get; set; }
         public Exercise Exercise { get; set; }
         public Instructor Instructor { get; set; }
