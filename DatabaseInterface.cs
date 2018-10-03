@@ -14,7 +14,7 @@ namespace nss.Data
         {
             get
             {
-                string _connectionString = $"Data Source=/change/me/to/path/to/your/project/nss.db";
+                string _connectionString = $"Data Source=./nss.db";
                 return new SqliteConnection(_connectionString);
             }
         }
