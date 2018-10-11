@@ -45,24 +45,24 @@ namespace nss
                 assign the corresponding cohort as a property on the instance of the
                 Instructor class that is created by Dapper.
              */
-            // db.Query<Instructor, Cohort, Instructor>(@"
-            //     SELECT i.CohortId,
-            //            i.FirstName,
-            //            i.LastName,
-            //            i.SlackHandle,
-            //            i.Specialty,
-            //            i.Id,
-            //            c.Id,
-            //            c.Name
-            //     FROM Instructor i
-            //     JOIN Cohort c ON c.Id = i.CohortId
-            // ", (instructor, cohort) =>
-            // {
-            //     instructor.Cohort = cohort;
-            //     return instructor;
-            // })
-            // .ToList()
-            // .ForEach(i => Console.WriteLine($"{i.FirstName} {i.LastName} ({i.SlackHandle}) is coaching {i.Cohort.Name}"));
+            db.Query<Instructor, Cohort, Instructor>(@"
+                SELECT i.CohortId,
+                       i.FirstName,
+                       i.LastName,
+                       i.SlackHandle,
+                       i.Specialty,
+                       i.Id,
+                       c.Id,
+                       c.Name
+                FROM Instructor i
+                JOIN Cohort c ON c.Id = i.CohortId
+            ", (instructor, cohort) =>
+            {
+                instructor.Cohort = cohort;
+                return instructor;
+            })
+            .ToList()
+            .ForEach(i => Console.WriteLine($"{i.FirstName} {i.LastName} ({i.SlackHandle}) is coaching {i.Cohort.Name}"));
 
 
 
@@ -118,10 +118,10 @@ namespace nss
             /*
                 Iterate the key/value pairs in the dictionary
              */
-            // foreach (KeyValuePair<int, Cohort> cohort in report)
-            // {
-            //     Console.WriteLine($"{cohort.Value.Name} has {cohort.Value.Instructors.Count} instructors.");
-            // }
+            foreach (KeyValuePair<int, Cohort> cohort in report)
+            {
+                Console.WriteLine($"{cohort.Value.Name} has {cohort.Value.Instructors.Count} instructors.");
+            }
 
 
 
@@ -204,17 +204,17 @@ namespace nss
             /*
                 Display the student information using the StringBuilder class
              */
-            // foreach (KeyValuePair<int, Student> student in verboseStudents)
-            // {
-            //     List<string> assignedExercises = new List<string>();
-            //     student.Value.AssignedExercises.ForEach(e => assignedExercises.Add(e.Name));
+            foreach (KeyValuePair<int, Student> student in verboseStudents)
+            {
+                List<string> assignedExercises = new List<string>();
+                student.Value.AssignedExercises.ForEach(e => assignedExercises.Add(e.Name));
 
-            //     StringBuilder output = new StringBuilder(100);
-            //     output.Append($"{student.Value.FirstName} {student.Value.LastName} ");
-            //     output.Append($"in {student.Value.Cohort.Name} ");
-            //     output.Append($"is working on {String.Join(',', assignedExercises)}.");
-            //     Console.WriteLine(output);
-            // }
+                StringBuilder output = new StringBuilder(100);
+                output.Append($"{student.Value.FirstName} {student.Value.LastName} ");
+                output.Append($"in {student.Value.Cohort.Name} ");
+                output.Append($"is working on {String.Join(',', assignedExercises)}.");
+                Console.WriteLine(output);
+            }
 
 
 
