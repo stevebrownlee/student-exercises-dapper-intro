@@ -19,11 +19,11 @@ namespace nss
         static void Main(string[] args)
         {
             SqliteConnection db = DatabaseInterface.Connection;
-            DatabaseInterface.CheckExerciseTable();
-            DatabaseInterface.CheckCohortTable();
-            DatabaseInterface.CheckInstructorsTable();
-            DatabaseInterface.CheckStudentTable();
-            DatabaseInterface.CheckStudentExerciseTable();
+            // DatabaseInterface.CheckExerciseTable();
+            // DatabaseInterface.CheckCohortTable();
+            // DatabaseInterface.CheckInstructorsTable();
+            // DatabaseInterface.CheckStudentTable();
+            // DatabaseInterface.CheckStudentExerciseTable();
 
             /*
                 Query the database for each instructor, and join in the instructor's cohort.

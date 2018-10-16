@@ -14,9 +14,7 @@ namespace nss.Data
         {
             get
             {
-                string env = $"{Environment.GetEnvironmentVariable("NSS_DB")}";
-                string _connectionString = $"Data Source={env}";
-                return new SqliteConnection(_connectionString);
+                return new SqliteConnection("Data Source=nss.db");
             }
         }
 
