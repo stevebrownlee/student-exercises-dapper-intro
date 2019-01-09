@@ -1,7 +1,7 @@
 using Dapper;
 using Microsoft.Data.Sqlite;
 
-namespace nss.Data
+namespace StudentExercises.Models
 {
     public class Instructor
     {

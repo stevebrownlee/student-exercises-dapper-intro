@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace nss.Data
+namespace StudentExercises.Models
 {
     public class Exercise
     {
